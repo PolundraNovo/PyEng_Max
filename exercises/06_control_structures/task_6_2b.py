@@ -12,3 +12,27 @@
 
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
+correct = False
+while correct == False:  # цикл, пока не будет введен корректный ip-адрес
+    ip = input('Введите ip-адрес: ')
+    s1 = ip.replace('.','')   # поместили все кроме точек в s1
+    if ip.count('.') == 3 and s1.isdigit():  # если точек было 3 и остальное - цифры, то продолжаем разбор
+        oct = ip.split('.') # разложили по октетам в список
+        for item in oct: # проверяем все октеты
+            if item == '' or int(item) > 255:  # если пусто или >255
+                correct = False  # неверно
+                break   # выходим из цикла
+            else:
+                correct = True  # все хорошо
+    # далее анализируем наш адрес
+if ip == '255.255.255.255':
+    print('local broadcast')
+elif ip == '0.0.0.0':
+    print('unassigned')
+elif int(oct[0]) <= 223:
+    print('unicast')
+elif int(oct[0]) >= 224 and int(oct[0]) <= 239:
+    print('multicast')
+else:
+    print('unused')
+
