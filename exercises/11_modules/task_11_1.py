@@ -43,7 +43,24 @@ def parse_cdp_neighbors(command_output):
     и с файлами и с выводом с оборудования.
     Плюс учимся работать с таким выводом.
     """
-
+    my_list = (command_output.split("\n"))  # put input to list
+    res = {}  # set for return
+    ok = False
+    for item in my_list:
+        if '>' in item:
+            from_device = item[:item.find('>')]
+        elif 'Device ID' in item:
+            ok = True  # next strings contain info for devices and interfaces
+        elif ok:
+            from_port = item[10:22].strip().replace(' ','')
+            if from_port:  # if correct string
+                to_device = item[:item.find(' ')]
+                to_port = item[-10:].strip().replace(' ','')
+#                print(f'{from_port=} {to_device=} {to_port=}')
+                res[(from_device, from_port)] = (to_device, to_port)
+            else:
+                ok = False
+    return(res)
 
 if __name__ == "__main__":
     with open("sh_cdp_n_sw1.txt") as f:
